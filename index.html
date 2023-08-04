@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานผล Covid-19</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="toggle-switch.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="content">
+        <div class="flex-container">
+            <p>จำนวนผู้ติดเชื้อใหม่</p>
+            <div id="newCase" class="value value-newcase"></div>
+        </div>
+        <div class="flex-container">
+            <p>จำนวนผู้เสียชีวิตใหม่</p>
+            <div id="newDeath" class="value value-newdeath"></div>
+        </div>
+        <div class="flex-container">
+            <p>จำนวนผู้ติดเชื้อสะสม</p>
+            <div id="totalCase" class="value value-totalcase"></div>
+        </div>
+        <div class="flex-container">
+            <p>จำนวนผู้เสียชีวิตสะสม</p>
+            <div id="totalDeath" class="value value-totaldeath"></div>
+        </div>
+        <div class="flex-container switch-container">
+            <p>Dark Mode</p>
+            <label class="switch">
+                <input id="toggle" type="checkbox" checked onclick="darkMode()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="flex-container">
+            <p class="date-text">อัพเดตข้อมูลล่าสุด</p>
+            <p id="updateDate" class="date-data"></p>
+        </div>
+
+    </div>
+
+    <script>
+        const newCase = document.getElementById('newCase');
+        const newDeath = document.getElementById('newDeath');
+        const totalCase = document.getElementById('totalCase');
+        const totalDeath = document.getElementById('totalDeath');
+        const updateDate = document.getElementById('updateDate');
+        const toggle = document.getElementById('toggle');
+        const p = document.querySelectorAll('p');
+        const body = document.querySelector('body');
+
+        axios.get('https://covid19.ddc.moph.go.th/api/Cases/today-cases-all')
+        .then(res => {
+            console.log(res.data);
+            newCase.innerHTML = res.data[0].new_case;
+            newDeath.innerHTML = res.data[0].new_death;
+            totalCase.innerHTML = res.data[0].total_case;
+            totalDeath.innerHTML = res.data[0].total_death;
+            updateDate.innerHTML = res.data[0].update_date;
+        })
+
+        const darkMode = () => {
+            if(toggle.checked == true){
+                for(i = 0; i < p.length; i++){
+                    p[i].style.color = '#ffffff';
+                }
+                body.style.backgroundColor = '#202020';
+            }
+            else{
+                for(i = 0; i < p.length; i++){
+                    p[i].style.color = '#000000';
+                }
+                body.style.backgroundColor = '#ffffff';
+            }
+        };
+    </script>
+</body>
+
+</html>
